@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.4
+Created-By: 1.6.0_31-b05 (Sun Microsystems Inc.)
+Signature-Title: Arduino_TTL
+Signature-Vendor: Marine Biological Laboratory (Rudolf Oldenbourg)
+Application-Plugin: Micro-Manager
+Built-By: Amitabh
+Built-Version: 2.19b
+Built-Date: 12-10-2014
+

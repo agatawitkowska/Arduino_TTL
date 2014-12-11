@@ -13,6 +13,8 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+build
+nbproject/private
 
 # =========================
 # Operating System Files
