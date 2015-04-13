@@ -87,7 +87,7 @@ public class TTLTagged implements MMPlugin {
 
     @Override
     public String getVersion() {
-        return "0.1";
+        return "1.1";
     }
 
     @Override

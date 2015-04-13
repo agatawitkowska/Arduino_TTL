@@ -105,7 +105,7 @@
     <Component class="javax.swing.JLabel" name="labelFooter">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="Marine Biological Laboratory &#xa9; 2009 - 2014"/>
+        <Property name="text" type="java.lang.String" value="Marine Biological Laboratory &#xa9; 2009 - 2015"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="labelWebPage">

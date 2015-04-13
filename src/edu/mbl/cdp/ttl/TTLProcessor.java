@@ -123,31 +123,14 @@ public class TTLProcessor extends DataProcessor<TaggedImage> {
                             String output = json.getString(TTL.Key_Output);
                             String output_dur = json.getString(TTL.Key_OutputDuration);
                             
-                            try {
-                                core_.setProperty(TTL.DeviceLabel + "-Switch", "State", Math.pow(2, pin_no - 8));
-                                if (output.equals(TTL.OutPut_High)) {
-                                    core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 1);
-                                } else if (output.equals(TTL.OutPut_Low)) {
-                                    core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 0);
-                                } else if (output.equals(TTL.OutPut_SquareWave)) {
-                                    int output_dur_d = (int) Integer.parseInt(output_dur);
-                                    core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 0);
-                                    Thread.sleep(output_dur_d);
-                                    core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 1);
-                                    Thread.sleep(output_dur_d);
-                                    core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 0);
-                                }
-                                
-                                if (isPrePost.equals("Pre")) {
-                                    Double d = core_.getDeviceDelayMs(TTL.DeviceLabel + "-Shutter");
-                                    Thread.sleep(d.intValue());
-                                }
-                            } catch (Exception ex) {
-                                ReportingUtils.logError(TTL.METADATAKEY + " : Error triggering on frame,channel,position,slice - " + frame_no + "," + channel_no + "," + position_no + "," + slice_no + " pin - " + pin_no);
-                            }
-                            
+                            boolean triggerResult = triggerArduino(output, pin_no, output_dur);                            
 
-                            if (fa.debugLogEnabled_) {
+                            if (isPrePost.equals("Pre") && triggerResult) {
+                                Double d = core_.getDeviceDelayMs(TTL.DeviceLabel + "-Shutter");
+                                Thread.sleep(d.intValue());
+                            }
+
+                            if (fa.debugLogEnabled_ && !triggerResult) {
                                 ReportingUtils.logMessage(TTL.METADATAKEY + " : end triggering on frame,channel,position,slice - " + frame_no + "," + channel_no + "," + position_no + "," + slice_no + " pin - " + pin_no);
                             }
                         }
@@ -162,5 +145,29 @@ public class TTLProcessor extends DataProcessor<TaggedImage> {
     
     public DataProcessor<TaggedImage> getDataProcessor() {
         return (DataProcessor<TaggedImage>) this;
+    }
+    
+    public synchronized boolean triggerArduino(String output, int pin_no, String output_dur) {
+        boolean bool = true;
+        try {
+            core_.setProperty(TTL.DeviceLabel + "-Switch", "State", Math.pow(2, pin_no - 8));
+            if (output.equals(TTL.OutPut_High)) {
+                core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 1);
+            } else if (output.equals(TTL.OutPut_Low)) {
+                core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 0);
+            } else if (output.equals(TTL.OutPut_SquareWave)) {
+                int output_dur_d = (int) Integer.parseInt(output_dur);
+                core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 0);
+                Thread.sleep(output_dur_d);
+                core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 1);
+                Thread.sleep(output_dur_d);
+                core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 0);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            bool = false;
+        }
+        
+        return bool;
     }
 }

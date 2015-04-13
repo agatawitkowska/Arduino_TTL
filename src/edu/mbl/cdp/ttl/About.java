@@ -27,7 +27,7 @@ package edu.mbl.cdp.ttl;
  * either expressed or implied, of any organization.
  * 
  * Multiple-Frame Averaging plug-in for Micro-Manager
- * @author Amitabh Verma (averma@mbl.edu), Grant Harris (gharris@mbl.edu)
+ * @author Amitabh Verma (averma@mbl.edu)
  * Marine Biological Laboratory, Woods Hole, Mass.
  * 
  */
@@ -143,7 +143,7 @@ public class About extends javax.swing.JFrame {
         labelVersion.setText("Version 1.0");
 
         labelFooter.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelFooter.setText("Marine Biological Laboratory © 2009 - 2014");
+        labelFooter.setText("Marine Biological Laboratory © 2009 - 2015");
 
         labelWebPage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelWebPage.setText("<html><a href=\"\">Web Page</a>");
