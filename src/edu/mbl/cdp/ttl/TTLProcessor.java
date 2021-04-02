@@ -38,6 +38,8 @@ import org.micromanager.acquisition.TaggedImageQueue;
 import org.micromanager.api.DataProcessor;
 import org.micromanager.utils.MDUtils;
 import org.micromanager.utils.ReportingUtils;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TTLProcessor extends DataProcessor<TaggedImage> {
 
@@ -156,12 +158,23 @@ public class TTLProcessor extends DataProcessor<TaggedImage> {
             } else if (output.equals(TTL.OutPut_Low)) {
                 core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 0);
             } else if (output.equals(TTL.OutPut_SquareWave)) {
-                int output_dur_d = (int) Integer.parseInt(output_dur);
-                core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 0);
-                Thread.sleep(output_dur_d);
-                core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 1);
-                Thread.sleep(output_dur_d);
-                core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 0);
+                int output_dur_d = Integer.parseInt(output_dur);
+                Timer shutterTimer = new Timer();
+                TimerTask closeTask = new TimerTask(){
+
+                    @Override
+                    public void run() {
+                        try {
+                            TTLProcessor.this.core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 0);
+                        }
+                        catch (Exception e) {
+                            ReportingUtils.logError("Timer exception occurred");
+                        }
+                        ReportingUtils.logMessage("Single pulse finished");
+                    }
+                };
+                this.core_.setProperty(TTL.DeviceLabel + "-Shutter", "OnOff", 1);
+                shutterTimer.schedule(closeTask, output_dur_d);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
